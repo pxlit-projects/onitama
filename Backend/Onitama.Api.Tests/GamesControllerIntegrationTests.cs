@@ -61,7 +61,7 @@ public class GamesControllerIntegrationTests : ControllerIntegrationTestsBase<Ga
         PlayerModel? playerSouth = game.Players.FirstOrDefault(p => p.Direction == Direction.South);
         Assert.That(playerSouth, Is.Not.Null, "No player found that has direction South");
         Assert.That(playerSouth!.MoveCards.Length, Is.EqualTo(2), "Each player should have 2 move cards");
-        AssertPlayerSchool(playerNorth, "top", game.PlayMat);
+        AssertPlayerSchool(playerSouth, "top", game.PlayMat);
 
         Assert.That(game.ExtraMoveCard, Is.Not.Null, "The game should have an extra move card");
 
@@ -72,7 +72,8 @@ public class GamesControllerIntegrationTests : ControllerIntegrationTestsBase<Ga
     {
         Assert.That(player!.School.AllPawns.Length, Is.EqualTo(5),
             $"The school of the player with direction '{player.Direction}' should have 5 pawns");
-        Assert.That(player.School.AllPawns.All(p => p.Position is not null && p.Position.Row == 0), Is.True,
+        int expectedRowPositionIndex = expectedRowPosition == "top" ? 4 : 0;
+        Assert.That(player.School.AllPawns.All(p => p.Position is not null && p.Position.Row == expectedRowPositionIndex), Is.True,
             $"All the pawns of the school of the player with direction '{player.Direction}' should be positioned on the {expectedRowPosition} row");
         Assert.That(player.School.AllPawns.All(p => playMat.Grid[p.Position.Row, p.Position.Column] is not null
                                                     && playMat.Grid[p.Position.Row, p.Position.Column].Id == p.Id), Is.True,
